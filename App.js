@@ -27,9 +27,9 @@ export default function App() {
   }
 
   // controle da atualização da rota de listagem (preciso rever essa parte, pois qualquer alteração no código, a chamada já responde)
-  useEffect(() => {
-    requestResponse()
-  }, [])
+  // useEffect(() => {
+  //   requestResponse()
+  // }, [])
 
   // controle da mudança do estado do botão
   useEffect(() => {
@@ -40,6 +40,20 @@ export default function App() {
       setClicou(false)
     }
   }, [clicou])
+
+  // chamada da rota de cadastro
+  const post = () => {
+    const data = {
+      nome_login: 'Harmonização Facial',
+      senha_login: '123456'
+    };
+    axios.post('http://192.168.10.242:3001/cadastrarCategoria', data)
+      .then(function (response) {
+        setPesquisa(response.data)
+        console.log("INSERÇÃO DO DADO: ", response) 
+
+      })
+  }
 
   // criação de um componente
   const Caixa = ({ campo }) => (
@@ -78,10 +92,17 @@ export default function App() {
           keyExtractor={item => item.cod_login}
         />
         <TouchableOpacity onPress={() => setClicou(true)}>
-          <Text>
-            Atualizar
+          <Text style={styles.botao}>
+            Listar
           </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => setClicou(post)}>
+          <Text style={styles.botao}>
+            Cadastrar
+          </Text>
+        </TouchableOpacity>
+
       </View>
     </ScrollView>
   );
@@ -127,5 +148,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     color: 'white'
+  },
+  botao: {
+    fontSize: 22
   }
 });
