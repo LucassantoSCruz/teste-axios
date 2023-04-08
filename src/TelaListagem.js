@@ -17,51 +17,46 @@ const TelaListagem = () => {
     const [nome_login, setnome_login] = useState(null)
     const [senha_login, setsenha_login] = useState(null)
 
+    // constande de dados
+    const [dados, setDados] = useState([])
+
     // chamada da rota de listagem
     const requestResponse = () => {
+
         axios.get('http://192.168.10.242:3001/listarUsuario')
 
             .then(function (response) {
                 setPesquisa(response.data)
                 console.log("RESULTADO DA BUSCA: ", pesquisa)
-
             })
 
             .catch(function (error) {
                 console.log(error)
-
             })
+
     }
 
     // chamada da rota de listagem de um nome especifico
     const Login = () => {
-        axios.get(`http://192.168.10.242:3001/listarUsuarioNOME/${nome_login}`
-            , {
-                data: {
+
+        axios.get(`http://192.168.10.242:3001/listarUsuarioNOME/${nome_login}`, {
+
+                dados: {
                     nome_login: nome_login,
                     senha_login: senha_login
                 }
+
             }
         )
             .then(function (response) {
-                console.log('Nome Encontrado: ', response.data.nome_login);
+                setDados(response.data)
+                console.log('Nome Encontrado: ', dados.data.nome_login);
 
-                if (response.data.nome_login == nome_login) {
-                    Alert.alert("Login Efetuado")
-                }
-                else {
-                    Alert.alert("Usuário não encontrado ")
-                }
             })
             .catch(function (error) {
                 console.error("Nome Não Encontrado: ", error)
             })
     }
-
-    // controle da atualização da rota de listagem (preciso rever essa parte, pois qualquer alteração no código, a chamada já responde)
-    // useEffect(() => {
-    //   requestResponse()
-    // }, [])
 
     // controle da mudança do estado do botão
     useEffect(() => {
@@ -73,7 +68,14 @@ const TelaListagem = () => {
         }
     }, [clicou])
 
-    
+    useEffect(()=>{
+        if (dados.data.nome_login == nome_login) {
+            Alert.alert("Login Efetuado")
+        }
+        else {
+            Alert.alert("Usuário não encontrado ")
+        }
+    },[dados])
 
     return (
         <ScrollView horizontal={true}>
