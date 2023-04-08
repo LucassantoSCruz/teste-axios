@@ -3,14 +3,17 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import TelaListagem from './src/TelaListagem';
 import TelaCadastro from './src/TelaCadastro';
+import TelaInicial from './src/TelaInicial';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Listagem'>
+      <Stack.Navigator initialRouteName='Inicio'>
+        <Stack.Screen name="Inicio" component={TelaInicial} />
         <Stack.Screen name="Listagem" component={TelaListagem} />
+        <Stack.Screen name="Cadastro" component={TelaCadastro} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -11,11 +11,11 @@ import { View, Text, StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     caixa: {
         backgroundColor: '#f9c2ff',
-        margin: 15,
-        padding: 15,
+        margin: 5,
+        padding: 5,
       },
       textocampo: {
-        fontSize: 32,
+        fontSize: 20,
       },
 })
 

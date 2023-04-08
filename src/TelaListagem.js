@@ -13,12 +13,13 @@ const TelaListagem = () => {
     // constate do botão
     const [clicou, setClicou] = useState(false);
 
+    // constante de nome e senha
     const [nome_login, setnome_login] = useState(null)
     const [senha_login, setsenha_login] = useState(null)
 
     // chamada da rota de listagem
     const requestResponse = () => {
-        axios.get('http://192.168.10.242:3001/listarCategoria')
+        axios.get('http://192.168.10.242:3001/listarUsuario')
 
             .then(function (response) {
                 setPesquisa(response.data)
@@ -32,22 +33,9 @@ const TelaListagem = () => {
             })
     }
 
-    // chamada da rota de cadastro
-    const post = () => {
-        axios.post('http://192.168.10.242:3001/cadastrarCategoria', {
-            nome_login,
-            senha_login
-        })
-            .then(function (response) {
-                setPesquisa(response.data)
-                console.log("INSERÇÃO DO DADO: ", response)
-
-            })
-    }
-
     // chamada da rota de listagem de um nome especifico
     const Login = () => {
-        axios.get(`http://192.168.10.242:3001/listarCategoriaNOME/${nome_login}`
+        axios.get(`http://192.168.10.242:3001/listarUsuarioNOME/${nome_login}`
             , {
                 data: {
                     nome_login: nome_login,
@@ -85,6 +73,8 @@ const TelaListagem = () => {
         }
     }, [clicou])
 
+    
+
     return (
         <ScrollView horizontal={true}>
             <View style={styles.container}>
@@ -114,19 +104,13 @@ const TelaListagem = () => {
 
                 <FlatList
                     data={pesquisa.data}
-                    renderItem={({ item }) => <CaixaServico campo={item.nome_login} />}
+                    renderItem={({ item }) => <Caixa campo={item.nome_login} />}
                     keyExtractor={item => item.cod_login}
                 />
 
                 <TouchableOpacity onPress={() => setClicou(true)}>
                     <Text style={styles.botao}>
                         Listar
-                    </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => setClicou(post)}>
-                    <Text style={styles.botao}>
-                        Cadastrar
                     </Text>
                 </TouchableOpacity>
 
