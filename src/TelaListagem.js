@@ -30,7 +30,7 @@ const TelaListagem = ({ navigation }) => {
 
             .then(function (response) {
                 setPesquisa(response.data)
-                console.log("RESULTADO DA BUSCA: ", pesquisa)
+                console.log("RESULTADO DA BUSCA: ", pesquisa.data)
             })
 
             .catch(function (error) {
@@ -43,22 +43,19 @@ const TelaListagem = ({ navigation }) => {
     const Login = () => {
 
         axios.get(`http://192.168.10.242:3001/listarUsuarioNOME/${nome_login}`, {
-
             dados: {
                 nome_login: nome_login,
                 senha_login: senha_login
             }
-
-        }
-        )
+        })
             .then(function (response) {
                 setDados(response.data)
-                console.log('Nome Encontrado: ', dados.data.nome_login);
+                console.log('Usuário Encontrado: ', dados.data.nome_login);
 
             })
             .catch(function (error) {
-                console.error("Erro: ", error)
-                Alert.alert("Digite o usuário e a senha")
+                //console.error("Erro: ", error)
+                Alert.alert("Usuario não encontrado.")
             })
     }
 
@@ -79,23 +76,22 @@ const TelaListagem = ({ navigation }) => {
         return () => {
             setBusca(false)
         }
-    }, [clicou])
+    }, [busca])
 
     useEffect(() => {
         if (dados.data != null) {
-            if (dados.data.nome_login == nome_login) {
+            if (dados.data.nome_login == nome_login, dados.data.senha_login == senha_login) {
                 Alert.alert(
                     "Login Realizado",
                     "Entre no Aplicativo",
-                    [
-                        {
-                            text: "Entrar",
-                            onPress: () => navigation.navigate('Principal'),
-                        },]
+                    [{
+                        text: "Entrar",
+                        onPress: () => navigation.navigate('Principal'),
+                    },]
                 )
             }
             else {
-                Alert.alert("Usuário não encontrado ")
+                Alert.alert("Senha Incorreta.")
             }
         }
     }, [dados])
@@ -103,7 +99,7 @@ const TelaListagem = ({ navigation }) => {
     return (
 
         <View style={styles.container}>
-            <Text>
+            <Text style={styles.titulo}>
                 Listagem Axios
             </Text>
 
@@ -135,17 +131,19 @@ const TelaListagem = ({ navigation }) => {
                 />
             </ScrollView>
 
-            <TouchableOpacity onPress={() => setClicou(true)}>
-                <Text style={styles.botao}>
-                    Listar
-                </Text>
-            </TouchableOpacity>
+            <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity onPress={() => setClicou(true)}>
+                    <Text style={styles.botao}>
+                        Listar
+                    </Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => Login()}>
-                <Text style={styles.botao}>
-                    Buscar
-                </Text>
-            </TouchableOpacity>
+                <TouchableOpacity onPress={() => setBusca(true)}>
+                    <Text style={styles.botao}>
+                        Buscar
+                    </Text>
+                </TouchableOpacity>
+            </View>
 
         </View>
 
@@ -157,13 +155,14 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
-    }, 
+    },
     titulo: {
         fontSize: 22,
         margin: 15
     },
     botao: {
-        fontSize: 22
+        fontSize: 22,
+        margin: 15
     },
     campoinserir: {
         width: '80%',
@@ -173,7 +172,7 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         padding: 10,
         borderRadius: 10,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
     },
 });
 

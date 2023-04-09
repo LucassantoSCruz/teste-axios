@@ -10,13 +10,13 @@ const TelaInicial = ({ navigation }) => {
 
             <TouchableOpacity style={styles.botaocadastro} onPress={()=>navigation.navigate('Cadastro')}>
                 <Text style={styles.textobotao}>
-                    Cadastrar Usuario
+                    Cadastrar Usuário
                 </Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.botaolistagem} onPress={()=>navigation.navigate('Listagem')}>
                 <Text style={styles.textobotao}>
-                    Listar Usuario
+                    Listar Usuário
                 </Text>
             </TouchableOpacity>
         </View>
