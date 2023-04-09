@@ -5,13 +5,16 @@ import axios from 'axios';
 import Caixa from './Caixa';
 import CaixaServico from './CaixaServico';
 
-const TelaListagem = () => {
+const TelaListagem = ({ navigation }) => {
 
     // constante da pesquisa
     const [pesquisa, setPesquisa] = useState([]);
 
     // constate do botão
     const [clicou, setClicou] = useState(false);
+
+    // constante do botão pesquisa
+    const [busca, setBusca] = useState(false);
 
     // constante de nome e senha
     const [nome_login, setnome_login] = useState(null)
@@ -41,12 +44,12 @@ const TelaListagem = () => {
 
         axios.get(`http://192.168.10.242:3001/listarUsuarioNOME/${nome_login}`, {
 
-                dados: {
-                    nome_login: nome_login,
-                    senha_login: senha_login
-                }
-
+            dados: {
+                nome_login: nome_login,
+                senha_login: senha_login
             }
+
+        }
         )
             .then(function (response) {
                 setDados(response.data)
@@ -54,7 +57,8 @@ const TelaListagem = () => {
 
             })
             .catch(function (error) {
-                console.error("Nome Não Encontrado: ", error)
+                console.error("Erro: ", error)
+                Alert.alert("Digite o usuário e a senha")
             })
     }
 
@@ -68,62 +72,83 @@ const TelaListagem = () => {
         }
     }, [clicou])
 
-    useEffect(()=>{
-        if (dados.data.nome_login == nome_login) {
-            Alert.alert("Login Efetuado")
+    useEffect(() => {
+        if (busca == true) {
+            Login()
         }
-        else {
-            Alert.alert("Usuário não encontrado ")
+        return () => {
+            setBusca(false)
         }
-    },[dados])
+    }, [clicou])
+
+    useEffect(() => {
+        if (dados.data != null) {
+            if (dados.data.nome_login == nome_login) {
+                Alert.alert(
+                    "Login Realizado",
+                    "Entre no Aplicativo",
+                    [
+                        {
+                            text: "Entrar",
+                            onPress: () => navigation.navigate('Principal'),
+                        },]
+                )
+            }
+            else {
+                Alert.alert("Usuário não encontrado ")
+            }
+        }
+    }, [dados])
 
     return (
-        <ScrollView horizontal={true}>
-            <View style={styles.container}>
-                <Text>
-                    Listagem Axios
-                </Text>
 
-                <TextInput
-                    style={styles.campoinserir}
-                    onChangeText={value => setnome_login(value)}
-                    value={nome_login}
-                />
+        <View style={styles.container}>
+            <Text>
+                Listagem Axios
+            </Text>
 
-                <TextInput
-                    style={styles.campoinserir}
-                    onChangeText={value => setsenha_login(value)}
-                    value={senha_login}
-                />
+            <TextInput
+                style={styles.campoinserir}
+                onChangeText={value => setnome_login(value)}
+                value={nome_login}
+            />
 
-                <Text>
-                    Nome: {nome_login}
-                </Text>
+            <TextInput
+                style={styles.campoinserir}
+                onChangeText={value => setsenha_login(value)}
+                value={senha_login}
+            />
 
-                <Text>
-                    Senha: {senha_login}
-                </Text>
+            <Text>
+                Nome: {nome_login}
+            </Text>
 
+            <Text>
+                Senha: {senha_login}
+            </Text>
+
+            <ScrollView horizontal={true}>
                 <FlatList
                     data={pesquisa.data}
                     renderItem={({ item }) => <Caixa campo={item.nome_login} />}
                     keyExtractor={item => item.cod_login}
                 />
+            </ScrollView>
 
-                <TouchableOpacity onPress={() => setClicou(true)}>
-                    <Text style={styles.botao}>
-                        Listar
-                    </Text>
-                </TouchableOpacity>
+            <TouchableOpacity onPress={() => setClicou(true)}>
+                <Text style={styles.botao}>
+                    Listar
+                </Text>
+            </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => setClicou(Login)}>
-                    <Text style={styles.botao}>
-                        Buscar
-                    </Text>
-                </TouchableOpacity>
+            <TouchableOpacity onPress={() => Login()}>
+                <Text style={styles.botao}>
+                    Buscar
+                </Text>
+            </TouchableOpacity>
 
-            </View>
-        </ScrollView>
+        </View>
+
     );
 }
 
@@ -132,6 +157,10 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
+    }, 
+    titulo: {
+        fontSize: 22,
+        margin: 15
     },
     botao: {
         fontSize: 22
