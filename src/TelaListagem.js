@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, ScrollView, StyleSheet, Text, View, Image, Touchable, TouchableOpacity, TextInput, Alert } from 'react-native';
+
 import axios from 'axios';
+
+import { useForm } from 'react-hook-form'
 
 import Caixa from './Caixa';
 import CaixaServico from './CaixaServico';
 
 const TelaListagem = ({ navigation }) => {
+
+    const { } = useForm();
 
     // constante da pesquisa
     const [pesquisa, setPesquisa] = useState([]);
@@ -23,6 +28,8 @@ const TelaListagem = ({ navigation }) => {
     // constande de dados
     const [dados, setDados] = useState([])
 
+
+
     // chamada da rota de listagem
     const requestResponse = () => {
 
@@ -39,6 +46,8 @@ const TelaListagem = ({ navigation }) => {
 
     }
 
+
+
     // chamada da rota de listagem de um nome especifico
     const Login = () => {
 
@@ -54,10 +63,12 @@ const TelaListagem = ({ navigation }) => {
 
             })
             .catch(function (error) {
-                //console.error("Erro: ", error)
-                Alert.alert("Usuario não encontrado.")
+                Alert.alert("Usuario não encontrado ou senha errada")
+                // console.error("Erro: ", error)
             })
     }
+
+
 
     // controle da mudança do estado do botão
     useEffect(() => {
@@ -69,14 +80,28 @@ const TelaListagem = ({ navigation }) => {
         }
     }, [clicou])
 
+
+
     useEffect(() => {
         if (busca == true) {
-            Login()
+            if (nome_login != null) {
+                if (senha_login != null) {
+                    Login()
+                }
+                else {
+                    Alert.alert('Digite sua senha.')
+                }
+            }
+            else {
+                Alert.alert("Digite seu Nome")
+            }
         }
         return () => {
             setBusca(false)
         }
     }, [busca])
+
+
 
     useEffect(() => {
         if (dados.data != null) {
@@ -90,11 +115,10 @@ const TelaListagem = ({ navigation }) => {
                     },]
                 )
             }
-            else {
-                Alert.alert("Senha Incorreta.")
-            }
         }
     }, [dados])
+
+
 
     return (
 
@@ -131,7 +155,7 @@ const TelaListagem = ({ navigation }) => {
                 />
             </ScrollView>
 
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity onPress={() => setClicou(true)}>
                     <Text style={styles.botao}>
                         Listar
